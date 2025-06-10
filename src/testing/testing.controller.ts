@@ -10,5 +10,4 @@ export class TestingController {
   async start(@Body() body: TestingDto) {
     return this.testingService.startTesting(body);
   }
-
 }

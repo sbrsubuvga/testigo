@@ -6,14 +6,21 @@ import { TestingBot } from 'src/bots/testing.bot';
 export class TestingService {
   constructor() {}
 
-  async startTesting({ url }: TestingDto) {
-    const { browser, page } = await TestingBot.start(url);
-
-    return {
-      status: 'testing_started',
-      message: 'Testing has started.',
-      browser: browser,
-      page: page,
-    };
+  async startTesting(body: TestingDto) {
+    const { browser, page, error } = await TestingBot.start(body);
+    if (error) {
+      return {
+        status: 'error',
+        message: 'An error occurred during testing.',
+        error: error,
+      };
+    } else {
+      return {
+        status: 'testing_started',
+        message: 'Testing has started.',
+        browser: browser,
+        page: page,
+      };
+    }
   }
 }
