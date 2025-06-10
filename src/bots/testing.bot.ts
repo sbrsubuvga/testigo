@@ -1,4 +1,3 @@
-import { error } from 'console';
 import puppeteer from 'puppeteer';
 import { TestingDto } from 'src/testing/dto/testing.dto';
 export class TestingBot {
@@ -10,6 +9,13 @@ export class TestingBot {
         '--no-sandbox',
         '--start-maximized',
         '--disable-save-password-bubble',
+        '--use-fake-ui-for-media-stream',
+        '--no-sandbox',
+        '--start-maximized',
+        '--disable-save-password-bubble',
+        '--disable-password-manager-reauthentication',
+        '--disable-features=AutofillServerCommunication,PasswordManagerService,AutofillEnableAccountWalletStorage',
+        '--disable-blink-features=CredentialManagerAPI',
       ],
       defaultViewport: {
         width: 1920,
@@ -37,6 +43,9 @@ export class TestingBot {
       } else if (act.action === 'click') {
         await page.waitForSelector(selector, { visible: true, timeout: 30000 });
         await page.click(selector);
+      } else if (act.action === 'hover') {
+        await page.waitForSelector(selector, { visible: true, timeout: 30000 });
+        await page.hover(selector);
       }
       if (act.waiting_after) {
         const waitTimeout = act.waiting_after.timeout || 60000;
@@ -61,6 +70,21 @@ export class TestingBot {
         // Add more wait types as needed
       }
     }
+
+    // // Hover over the "Items" menu to reveal the submenu
+    // await page.waitForSelector('li.has-submenu[ng-reflect-ng-class*="items"]', {
+    //   visible: true,
+    // });
+    // await page.hover('li.has-submenu[ng-reflect-ng-class*="items"]');
+
+    // // Wait for "Categories" submenu item to appear
+    // await page.waitForSelector('#sub-menu-categories', { visible: true });
+
+    // // Click the "Categories" submenu item
+    // await page.click('#sub-menu-categories');
+
+    // // Optionally, wait for the Categories page to load
+    // await page.waitForNavigation({ waitUntil: 'networkidle2' });
 
     // // Wait for the email input and type the email
     // await page.waitForSelector('#username', { visible: true, timeout: 30000 });
