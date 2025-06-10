@@ -35,9 +35,8 @@ export class TestingBot {
     // Wait for navigation or some indication of successful login
     await page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 60000 });
 
-    return {
-      status: 'testing_completed',
-      message: 'Testing has completed successfully.',
-    };
+    // Return browser and page so other functions can use them
+    return { browser, page };
   }
+
 }

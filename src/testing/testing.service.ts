@@ -7,8 +7,13 @@ export class TestingService {
   constructor() {}
 
   async startTesting({ url }: TestingDto) {
-    await TestingBot.start(url);
+    const { browser, page } = await TestingBot.start(url);
 
-    return { status: 'testing_started', message: 'Testing has started.' };
+    return {
+      status: 'testing_started',
+      message: 'Testing has started.',
+      browser: browser,
+      page: page,
+    };
   }
 }
