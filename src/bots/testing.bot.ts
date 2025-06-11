@@ -31,21 +31,42 @@ export class TestingBot {
       timeout: body.timeout || 60000,
     });
     for (const act of body.actions) {
-      const selector = this.buildSelector(act.selector);
+      console.log(
+        'Performing action:',
+        act.action,
+        'on selector:',
+        act.selector,
+      );
+      const selector = act.selector.trim();
       if (!selector) {
         console.error('Invalid selector:', act.selector);
         const error = new Error('Invalid selector: ' + act.selector);
-        return { browser, page, error }; // Return early if selector is invalid
+        return { browser, page, error };
       }
       if (act.action === 'type') {
-        await page.waitForSelector(selector, { visible: true, timeout: 30000 });
-        await page.type(selector, act.value || '', { delay: 50 });
+        console.log('Waiting for element to be inputable:');
+        const element = await page.waitForSelector(selector, {
+          visible: true,
+          timeout: 3000,
+        });
+        console.log('Typing into element:', selector);
+        await element.type(act.value || '', { delay: 100 });
       } else if (act.action === 'click') {
-        await page.waitForSelector(selector, { visible: true, timeout: 30000 });
-        await page.click(selector);
+        console.log('Waiting for element to be clickable:');
+        const element = await page.waitForSelector(selector, {
+          visible: true,
+          timeout: 3000,
+        });
+        console.log('Clicking on element:', selector);
+        await element.click();
       } else if (act.action === 'hover') {
-        await page.waitForSelector(selector, { visible: true, timeout: 30000 });
-        await page.hover(selector);
+        console.log('Waiting for element to be hoverable:');
+        const element = await page.waitForSelector(selector, {
+          visible: true,
+          timeout: 3000,
+        });
+        console.log('Hovering over element:', selector);
+        await element.hover();
       }
       if (act.waiting_after) {
         const waitTimeout = act.waiting_after.timeout || 60000;
@@ -71,47 +92,6 @@ export class TestingBot {
       }
     }
 
-    // // Hover over the "Items" menu to reveal the submenu
-    // await page.waitForSelector('li.has-submenu[ng-reflect-ng-class*="items"]', {
-    //   visible: true,
-    // });
-    // await page.hover('li.has-submenu[ng-reflect-ng-class*="items"]');
-
-    // // Wait for "Categories" submenu item to appear
-    // await page.waitForSelector('#sub-menu-categories', { visible: true });
-
-    // // Click the "Categories" submenu item
-    // await page.click('#sub-menu-categories');
-
-    // // Optionally, wait for the Categories page to load
-    // await page.waitForNavigation({ waitUntil: 'networkidle2' });
-
-    // // Wait for the email input and type the email
-    // await page.waitForSelector('#username', { visible: true, timeout: 30000 });
-    // await page.type('#username', email, { delay: 50 });
-
-    // // Wait for the password input and type the password
-    // await page.waitForSelector('#password', { visible: true, timeout: 30000 });
-    // await page.type('#password', password, { delay: 50 });
-
-    // // Click the Login button
-    // await page.click('button.btn.btn-primary');
-
-    // // Wait for navigation or some indication of successful login
-    // await page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 60000 });
-
-    // Return browser and page so other functions can use them
     return { browser, page };
-  }
-
-  private static buildSelector(sel: {
-    id?: string;
-    class?: string;
-    tag?: string;
-  }) {
-    let selector = sel.tag || '';
-    if (sel.id) selector += `#${sel.id}`;
-    if (sel.class) selector += '.' + sel.class.trim().split(/\s+/).join('.');
-    return selector;
   }
 }

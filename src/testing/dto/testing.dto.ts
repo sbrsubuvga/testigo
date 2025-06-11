@@ -11,11 +11,7 @@ export class TestingDto {
 
 export interface ITestingAction {
   action: string;
-  selector: {
-    id?: string;
-    class?: string;
-    tag?: string;
-  };
+  selector: string;
   value?: string;
   waiting_after: IWaitAction;
 }
