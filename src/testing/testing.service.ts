@@ -8,8 +8,9 @@ export class TestingService {
 
   async startTesting(body: TestingDto) {
     const { browser, page, error } = await TestingBot.start(body);
-    // await page.close();
-    // await browser.close();
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await page.close();
+    await browser.close();
     if (error) {
       return {
         status: 'error',
